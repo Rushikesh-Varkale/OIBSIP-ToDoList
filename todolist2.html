@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do-List</title>
+    <style>
+        body {
+            /* background-color: rgb(92, 126, 165); */
+            margin: 0px;
+            /* display: grid;
+            grid-template-columns: 1fr 5fr;
+            border: 2px solid black;
+            height: 712px; */
+        }
+        .container0{
+            display: grid;
+            grid-template-columns: 1fr 5fr;
+            /* border: 1px solid red; */
+            height: 712px;
+        }
+
+        .container1 {
+            display: flex;
+            flex-direction: column;
+            /* border: 1px solid red; */
+            padding-top: 15px;
+
+        }
+
+        /* .container2 {
+             border: 1px solid red; 
+        }  */
+
+        .btn {
+            margin: 20px auto;
+            width: 150px;
+            height: 50px;
+            border-radius: 10px;
+            font-size: 18px;
+            background-color: rgb(255, 234, 209);
+        }
+
+        #mydate {
+            font-size: 18px;
+            /* border: none; */
+            /* outline: none; */
+
+        }
+
+        .Mybox {
+            display: grid;
+            margin: auto;
+            width: 300px;
+            height: 350px;
+            border: 2px solid black;
+            padding: 10px;
+            grid-row-gap: 10px;
+        }
+
+        .intitle {
+            height: 60px;
+            font-size: 18px;
+        }
+
+        .indescription {
+            height: 200px;
+            font-size: 18px;
+        }
+
+        .Save {
+            display: block;
+            height: 50px;
+            background-color: green;
+        }
+        .task {
+            border-radius: 10px;
+            height: 80px;
+            border: 2px solid black;
+            display: grid;
+            grid-template-columns: 2fr 4fr 1fr;
+            background-color: rgb(225, 203, 196);
+            
+            margin:15px;
+
+
+}
+
+.title {
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.description {
+    justify-content: center;
+    border: 1px solid black;
+    align-items: center;
+    display: flex;
+    
+}
+
+.delete {
+    border: 1px solid black;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+#title {
+   
+    font-size: 20px;
+
+}
+
+#description{
+    font-size: 20px;
+}
+
+#delete {
+    font-size: 20px;
+}
+h1{
+    color:red;
+    /* border:2px solid black; */
+    text-align: center;
+}
+    </style>
+</head>
+
+<body>
+    <h1>To-Do-List</h1>
+    <div class="container0" id="container0">
+        <div class="container1" id="container1">
+            <input type="Date" id="mydate" onchange="runthisfunction()" class="btn">
+            <button class="btn" onclick="showcompletedtask()">Completed task</button>
+            <button class="btn" onclick="showpendingtask()">Pending task</button>
+            <button class="btn" onclick="beforeaddtask()">Add task</button>
+            
+        </div>
+        <div class="container2" id="container2">
+        </div>
+    </div>
+</body>
+<script>
+
+    let str0 = '<div class="task"><div class="title" id="title">Title</div><div class="description" id="description">Description</div><div class="delete" id="delete">Delete </div></div>';
+    let mydate = document.getElementById('mydate');
+
+    
+    //set default value todays date;
+    function mont(para) {
+        if (para.length == 2) {
+            return para;
+        }
+        else {
+            return "0" + para;
+        }
+    }
+    function dat(para) {
+        if (para.length == 2) {
+            return para;
+        }
+        else {
+            return "0" + para;
+        }
+    }
+
+
+    let tdte = new Date();
+    let mn = mont(tdte.getMonth() + 1);
+    console.log(mont(tdte.getMonth() + 1));
+    let yr = tdte.getFullYear();
+    let dte = dat(`${tdte.getDate()}`);
+    let today = `${yr}-${mn}-${dte}`;
+    mydate.value = today;
+    //default value of date is setted;
+    
+
+    // let arr=[];
+    let arr=[[today, str0]];
+    
+
+    function runthisfunction(){
+        let check=0;
+        let currentdate=mydate.value;
+        for(let i=0;i<arr.length;i++){
+            if(arr[i][0]==currentdate){
+                container2.innerHTML=updateinnerHtml(i);
+                check=1;
+                break;
+            }
+        }
+        if(check==0){
+            container2.innerHTML=str0;
+        }
+    }
+    function beforeaddtask(){
+        let check=0;
+        let indexofarr;
+        let currentdate=mydate.value;
+        for(let i=0;i<arr.length;i++){
+            if(arr[i][0]==currentdate){
+                indexofarr=i;
+                check=1;
+                break;
+            }
+        }
+        if(check==0){
+            arr[arr.length]=[currentdate,str0];
+        }
+        let strbox = `<div class="Mybox">
+        <input type="text" placeholder="Title" class="intitle" id="intitle">
+        <textarea class="indescription" id="indescription" cols="30" rows="11"></textarea>
+        <button onclick="addtask(${indexofarr})" class="Save">Save</button>
+    </div>`
+        container2.innerHTML = updateinnerHtml(indexofarr) + strbox;
+        
+    }
+    function updateinnerHtml(indexofarr){
+            let str='';
+            for(let i=1;i<arr[indexofarr].length;i++){
+                if(arr[indexofarr][i]!=''){
+                    str=str+arr[indexofarr][i];
+                }
+            }
+            return str;
+        }
+        function addtask(indexofarr){
+            let idno=((arr[indexofarr]).length);
+            
+            let indescription=document.getElementById('indescription');
+            let intitle=document.getElementById('intitle');
+            let titlestr=intitle.value;
+            let descriptionstr=indescription.value;
+            
+            let str=`<div class="task" id="${idno}"><div class="title" >${titlestr}</div><div class="description">${descriptionstr}</div><div class="delete" ><button onclick="deltask(${idno},${indexofarr})">del</button></div></div>`;
+           
+            arr[indexofarr][idno]=str;
+
+            container2.innerHTML=updateinnerHtml(indexofarr);
+            console.log(arr);
+        }
+        function deltask(idno,indexofarr){
+            arr[indexofarr][idno]='';
+            container2.innerHTML=updateinnerHtml(indexofarr);
+        }
+        container2.innerHTML=str0;
+
+        
+
+
+
+</script>
+
+</html>
